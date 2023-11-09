@@ -3,7 +3,7 @@ var router = express.Router();
 require('dotenv').config();
 const axios = require('axios');
 
-const apiKey = /*Bakc4App Remove this only -> process.env. */OPENTRIP_TOKEN;
+const apiKey = process.env.OPENTRIP_TOKEN;
 
 const apiGet = (method, query) => {
   return new Promise(function (resolve, reject) {
