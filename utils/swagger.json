@@ -1,0 +1,443 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Library API",
+    "version": "1.0.0",
+    "description": "API Epic Road Trip",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "scheme": "Bearer",
+      "in": "header"
+    }
+  },
+  "host": "localhost:9000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Register",
+      "description": "Create an account on API."
+    },
+    {
+      "name": "Login",
+      "description": "Connect to the API with yours crédentials."
+    },
+    {
+      "name": "Users",
+      "description": "Customer to consume API."
+    },
+    {
+      "name": "Places",
+      "description": "Everything related to points of interest"
+    },
+    {
+      "name": "Report",
+      "description": "Endpoint for generate report of trip. You will get a docx file with all details."
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get all users in system",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Users"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create new user in system",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create new user in system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get an user in system by his id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Users"],
+        "description": "Update user in system",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User's Id required for update.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to update",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User is updated",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "description": "Delete user in system by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User's Id required for delete.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User is deleted",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/places": {
+      "post": {
+        "tags": ["Places"],
+        "summary": "Finds 30 places of interest in a radius of 10km around a city",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "description": "City name - Example : 'Paris'"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Places"
+            }
+          }
+        }
+      }
+    },
+    "/places/details": {
+      "post": {
+        "tags": ["Places"],
+        "summary": "Provides additional details on a place of interest",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "xid",
+            "in": "path",
+            "description": "Place id - Example : 'N191031796'"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Places"
+            }
+          }
+        }
+      }
+    },
+    "/generate": {
+      "post": {
+        "tags": ["Report"],
+        "summary": "Create your own roadtrip file.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generate a docx file with all details of your roadtrip.",
+        "parameters": [
+          {
+            "name": "report",
+            "in": "body",
+            "description": "Roadtrip that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Roadtrip is created",
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "required": ["username", "_id", "email", "password", "role"],
+      "properties": {
+        "_id": {
+          "type": "ObjectId",
+          "uniqueItems": true
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    },
+    "Place": {
+      "required": ["username", "_id", "email", "password", "role"],
+      "properties": {
+        "xid": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "dist": {
+          "type": "number"
+        },
+        "rate": {
+          "type": "integer"
+        },
+        "osm": {
+          "type": "string"
+        },
+        "wikidata": {
+          "type": "string"
+        },
+        "kinds": {
+          "type": "string"
+        },
+        "point": {
+          "type": "object",
+          "properties": {
+            "lon": {
+              "type": "number"
+            },
+            "lat": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "Places": {
+      "type": "array",
+      "$ref": "#/definitions/Place"
+    },
+    "PlaceDetails": {
+      "required": [],
+      "properties": {
+        "xid": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "dist": {
+          "type": "number"
+        },
+        "rate": {
+          "type": "integer"
+        },
+        "osm": {
+          "type": "string"
+        },
+        "wikidata": {
+          "type": "string"
+        },
+        "kinds": {
+          "type": "string"
+        },
+        "point": {
+          "type": "object",
+          "properties": {
+            "lon": {
+              "type": "number"
+            },
+            "lat": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "Report": {
+      "required": ["from", "to", "waypoints", "start_date", "end_date", "user"],
+      "properties": {
+        "from": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          }
+        },
+        "to": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          }
+        },
+        "waypoints": {
+          "type": "array",
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "activities": {
+              "type": "objet",
+              "properties": {
+                "Restaurants": {
+                  "type": "array"
+                },
+                "Events": {
+                  "type": "array"
+                },
+                "Accomodations": {
+                  "type": "array"
+                },
+                "Transports": {
+                  "type": "array"
+                },
+                "Bars": {
+                  "type": "array"
+                },
+                "Sports": {
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "start_date": {
+          "type": "date"
+        },
+        "end_date": {
+          "type": "date"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "firt_name": {
+              "type": "string"
+            },
+            "last_name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
